@@ -22,26 +22,34 @@ define(function() {
                         controller.apply(controller, arguments);
                         self.trigger('postAction');
                     };
-                } else {
-                    var action = 'index';
-                    if (controller.match('@')) {
-                        var arr = controller.split('@');
-                        controller = arr[0];
-                        action = arr[1];
-                    }
-
-                    routes[route] = function() {
-                        require([
-                            controller
-                        ], function(controller) {
+                } else {                    
+                    if (typeof self[controller] == 'function') {
+                        routes[route] = function() {
                             self.trigger('preAction');
-                            if (typeof controller == 'function') {
-                                controller.apply(controller, arguments);
-                            } else {
-                                controller[action].apply(controller, arguments);
-                            }
+                            self[controller].apply(controller, arguments);
                             self.trigger('postAction');
-                        });
+                        };
+                    } else {
+                        var action = 'index';
+                        if (controller.match('@')) {
+                            var arr = controller.split('@');
+                            controller = arr[0];
+                            action = arr[1];
+                        }
+                        
+                        routes[route] = function() {
+                            require([
+                                controller
+                            ], function(controller) {
+                                self.trigger('preAction');
+                                if (typeof controller == 'function') {
+                                    controller.apply(controller, arguments);
+                                } else {
+                                    controller[action].apply(controller, arguments);
+                                }
+                                self.trigger('postAction');
+                            });
+                        }
                     }
                 }
             }, this);
