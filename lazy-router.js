@@ -14,9 +14,14 @@ define(function() {
 
         _bindRoutes: function() {
             var routes = {};
+            var self = this;
             _.forEach(this.routes, function(controller, route) {
                 if (typeof controller == 'function') {
-                    routes[route] = controller;
+                    routes[route] = function() {
+                        self.trigger('preAction');
+                        controller.apply(controller, arguments);
+                        self.trigger('postAction');
+                    };
                 } else {
                     var action = 'index';
                     if (controller.match('@')) {
@@ -29,11 +34,13 @@ define(function() {
                         require([
                             controller
                         ], function(controller) {
+                            self.trigger('preAction');
                             if (typeof controller == 'function') {
                                 controller.apply(controller, arguments);
                             } else {
                                 controller[action].apply(controller, arguments);
                             }
+                            self.trigger('postAction');
                         });
                     }
                 }
