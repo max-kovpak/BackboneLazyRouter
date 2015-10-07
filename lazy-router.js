@@ -16,7 +16,7 @@ define(function() {
             Backbone.history.navigate(fragment, options);
             return this;
         },
-        
+
         _bindRoutes: function() {
             var routes = {};
             var self = this;
@@ -43,14 +43,15 @@ define(function() {
                         }
 
                         routes[route] = function() {
+                            var args = arguments;
                             require([
                                 controller
                             ], function(controller) {
                                 self.trigger('preAction');
                                 if (typeof controller == 'function') {
-                                    controller.apply(controller, arguments);
+                                    controller.apply(controller, args);
                                 } else {
-                                    controller[action].apply(controller, arguments);
+                                    controller[action].apply(controller, args);
                                 }
                                 self.trigger('postAction');
                             });
