@@ -12,6 +12,11 @@ define(function() {
         routes: {},
         router: null,
 
+        navigate: function(fragment, options) {
+            Backbone.history.navigate(fragment, options);
+            return this;
+        },
+        
         _bindRoutes: function() {
             var routes = {};
             var self = this;
@@ -22,7 +27,7 @@ define(function() {
                         controller.apply(controller, arguments);
                         self.trigger('postAction');
                     };
-                } else {                    
+                } else {
                     if (typeof self[controller] == 'function') {
                         routes[route] = function() {
                             self.trigger('preAction');
@@ -36,7 +41,7 @@ define(function() {
                             controller = arr[0];
                             action = arr[1];
                         }
-                        
+
                         routes[route] = function() {
                             require([
                                 controller
@@ -57,10 +62,10 @@ define(function() {
             this.router = new Backbone.Router({
                 routes: routes
             });
-        },
-
-        extend: Backbone.History.extend
+        }
     });
+
+    Router.extend = Backbone.History.extend;
 
     return Router;
 });
