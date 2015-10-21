@@ -11,7 +11,6 @@ define(function () {
         initialize: function () {
         },
         routes: {},
-        _processedRoutes: [],
         router: null,
 
         navigate: function (fragment, options) {
