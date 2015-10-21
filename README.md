@@ -7,6 +7,11 @@ require([
     'lazy-router.js'
 ], function(LazyRouter) {
     var Router = LazyRouter.extend({
+    
+        initialize: function() {
+            this.route('home(/)', 'controllers/default');
+        },
+    
         routes: {
             '(/)': 'controllers/default', //by default it call "index" action or controller may be a function
             'auth/login': 'controllers/security@login',
